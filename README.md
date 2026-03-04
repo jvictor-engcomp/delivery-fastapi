@@ -20,6 +20,7 @@ Permite cadastro de usuários, autenticação com JWT e gerenciamento de pedidos
 ## 📦 Estrutura do Projeto
 
 app/
+
 ├── main.py
 
 ├── models/
