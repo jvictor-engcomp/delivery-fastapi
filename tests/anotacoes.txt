@@ -1,0 +1,70 @@
+1° main
+    importar FastAPI da biblioteca fastapi. Criar um objeto para ser seu
+app ao receber uma instancia do FastAPI.
+
+2° rotas.py
+    importar APIRouter que é a classe roteadora. Criar um obj informando
+    prefixo e tags. Criar rotas com decorator, escolher o método da
+    requisição e nomear rota. usar função async e return
+
+3° main
+    importar objetos roteadores para a main e incluir no obj app com 
+    .inlcude_router()
+
+4° models
+    aqui tratamos do banco de dados. Usar sqlalchemy, importar create_
+    engine que serve para linkar com o banco de dados, importar 
+    declarative_base que serve para criar a base do banco e o orm, 
+    importar tipos como Column, Integer... ForeignKey. Criar classes que
+    serão as tabelas, por a base como parâmetro, definir as colunas 
+
+5° models -> alembic
+    alambic serve para mexer com migrações/atualizações do banco de dados
+    comandos:
+        alambic init alambic(alterar link e base posteriormente)
+        alambic revision --autogenerate -m ""
+        alambic upgrade head
+ 
+6° auth_routes
+    criar a rota criar_usuario. verificar se o usuario já existe, caso não,
+    pode adicionar. Para fazer alguma resquisição no banco de dados, tem 
+    que existir uma função que passa uma sessao como dependência no 
+    parâmetro. Importar Depends do fastapi.
+
+7° dependencies
+    declarar essa função que passa a sessão. dentro dela, criar a classe
+    Sessão com sessionmaker, importada do sqlalchemy.orm e passar como
+    bind = db. Usar yield para dar um "return" dessa sessão, isso dentro 
+    de um try, dentro do finally fechar a sessão.
+
+8° criptografando senhas
+    importar cryptcontext de passlib.context e criar um obj crypt_context
+    com schemes e deprecated, ele cria uma senha criptografada em forma 
+    de hash. não depende da secrete_key
+
+9° personalizando saída de funções 
+    importar HTTPException e usar no lugar do return um raise 
+    HTTPException(codigo, mensagem)
+    
+10° padronizar entradas como usuario, e não seus atributos 
+    criar arquivo schemas.py para ter seu schema. importar basemodel de 
+    pydantic e optional de typing, criar a classe com basemodel como 
+    parâmetro e usar optional quando necessário. Classe interna Config 
+    atribuir True a from_atributes. Essa classe funcionará como um json
+    na requisição
+
+11° rota de login
+    criar rota de login que verifica se usuario já está cadastrado e 
+    retorna um token. criar schema de login e função a parte para gerar 
+    token.criar função a parte para autenticar usuario e usar o verify do
+    bcrypt
+
+12° tokens
+    criar função que cria tokens e recebe como parâmetro informações  e tempo
+    de expiracao. Importar jwt e jwterror do jose e criar um jwt.encode que 
+    recebe essas informações, a secretkey e o algoritimo para criar o token.
+    retornar esse token para acesstoken ou refreshtoken, usado na rota de login.
+
+13° começo da dinâmica do accesse e refresh token 
+use refresh token
+verificar token
