@@ -21,10 +21,15 @@ Permite cadastro de usuários, autenticação com JWT e gerenciamento de pedidos
 
 app/
 ├── main.py
+
 ├── models/
+
 ├── schemas/
+
 ├── routes/
+
 ├── dependencies.py
+
 
 
 ---
