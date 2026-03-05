@@ -38,7 +38,7 @@ async def criar_usuario(usuarioschema: UsuarioSchema, session: Session = Depends
         raise HTTPException(400, detail='usuario já cadastrado')
     else:
         senha_criptografada = bcrypt_context.hash(usuarioschema.senha)
-        novo_usuario = Usuario(usuarioschema.nome, usuarioschema.email, senha_criptografada)
+        novo_usuario = Usuario(usuarioschema.nome, usuarioschema.email, senha_criptografada, usuarioschema.ativo, usuarioschema.admin)
         session.add(novo_usuario)
         session.commit()
         return {'mensagem': 'Usuario criado com sucesso'} 
