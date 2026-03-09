@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, Float, ForeignKey #importar o criador do banco para conectar e os tipos usados nas colunas
-from sqlalchemy.orm import declarative_base #a base que permite o orm, conecção de classes e objetos com as tabelas sql
+from sqlalchemy.orm import declarative_base, relationship #a base que permite o orm, conecção de classes e objetos com as tabelas sql
 from sqlalchemy_utils.types import ChoiceType
 
 db = create_engine('sqlite:///banco.db')
@@ -35,11 +35,15 @@ class Pedido(Base):
     idusuario = Column('idusuario', ForeignKey('usuarios.id'))
     status = Column('status', String, default= 'PENDENTE')
     preco = Column('preco', Float)
+    itens = relationship("ItenPedido", cascade= 'all, delete')
 
     def __init__(self, idusuario, status= "PENDENTE", preco= 0):
         self.idusuario = idusuario
         self.status = status
         self.preco = preco
+
+    def atualizar_valor(self):
+        self.preco = sum(iten.preco_unitario * iten.quantidade for iten in self.itens)
 
 class ItenPedido(Base):
     __tablename__ = 'itens_pedidos'
