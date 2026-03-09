@@ -7,17 +7,15 @@ from alembic import context
 
 import sys
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
 
+from app.database.connection import DATABASE_URL
 if DATABASE_URL:
     config.set_main_option("sqlalchemy.url", DATABASE_URL)
 else:
@@ -30,7 +28,7 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.models.models import Base
+from app.database.connection import Base
 target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,

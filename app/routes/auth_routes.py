@@ -1,7 +1,7 @@
 #importando função que cria um roteador
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from app.models.models import Usuario  
+from app.models.usuario_model import Usuario  
 from app.dependencies import pegar_sessao, verificar_token
 from app.main import bcrypt_context, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.schemas.schemas import UsuarioSchema, LoginSchema, UsuarioSchemaResponse

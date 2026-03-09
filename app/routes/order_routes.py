@@ -3,23 +3,22 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.dependencies import pegar_sessao, verificar_token
 from app.schemas.schemas import PedidoSchema, ItemSchema, PedidoSchemaResponse
-from app.models.models import Pedido, Usuario, ItenPedido
+from app.models.usuario_model import Usuario
+from app.models.pedido_model import Pedido
+from app.models.itempedido_model import ItemPedido
 from typing import List
 
 order_router = APIRouter(prefix= '/orders', tags= ['orders'], dependencies=[Depends(verificar_token)])
 
 #utiliza-se decorator para criar rotas 
-@order_router.get('/listarpedido')
+@order_router.get('/listarpedidos')
 async def listar(usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
     '''
     Docstring é captada pelo fastapi, pode ser usada para documentar
     '''
-    if not usuario.admin:
-        raise HTTPException(400, 'Você não tem permissão para essa rota')
-    else:
-        pedidos = session.query(Pedido).all()
-        return {'mensagem': 'listando pedidos',
-                'pedidos': pedidos}
+    pedidos = session.query(Pedido).filter(Pedido.id == usuario.id).all()
+    return {'mensagem': 'listando pedidos',
+            'pedidos': pedidos}
 
 
 @order_router.post('/criarpedido')
@@ -56,7 +55,7 @@ async def adicionar_item(id_pedido: int, itemschema: ItemSchema, usuario: Usuari
         raise HTTPException(400, 'Pedido não existe.')
     if  pedido.idusuario != usuario.id and not usuario.admin:
         raise HTTPException(400, 'Você não pode alterar esse pedido.')
-    itempedido = ItenPedido(itemschema.quantidade, itemschema.sabor, itemschema.tamanho, itemschema.preco_unitario, itemschema.idpedido)
+    itempedido = ItemPedido(itemschema.quantidade, itemschema.sabor, itemschema.tamanho, itemschema.preco_unitario, itemschema.idpedido)
 
     session.add(itempedido)
     pedido.atualizar_valor()
@@ -69,7 +68,7 @@ async def adicionar_item(id_pedido: int, itemschema: ItemSchema, usuario: Usuari
 
 @order_router.post('/removeritem/{id_item}')
 async def remover_item(id_item: int, usuario: Usuario = Depends(verificar_token),  session: Session = Depends(pegar_sessao)):
-    item = session.query(ItenPedido).filter(ItenPedido.id == id_item).first()
+    item = session.query(ItemPedido).filter(ItemPedido.id == id_item).first()
     pedido = session.query(Pedido).filter(Pedido.id == item.idpedido).first()
     if not item:
         raise HTTPException(400, 'item não existe.')
