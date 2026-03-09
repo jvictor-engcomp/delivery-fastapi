@@ -1,7 +1,7 @@
 #importando função que cria um roteador
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.dependencies import pegar_sessao, verificar_token
+from app.core.dependencies import pegar_sessao, verificar_token
 from app.schemas.schemas import PedidoSchema, ItemSchema, PedidoSchemaResponse
 from app.models.usuario_model import Usuario
 from app.models.pedido_model import Pedido

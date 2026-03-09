@@ -1,5 +1,5 @@
-from app.database.connection import db
-from sqlalchemy.orm import sessionmaker, Session
+from app.database.session import SessionLocal
+from sqlalchemy.orm import Session
 from app.models.usuario_model import Usuario
 from fastapi import Depends, HTTPException
 from jose import jwt, JWTError
@@ -7,8 +7,7 @@ from app.main import SECRET_KEY, ALGORITHM, oauth2_schema
 
 def pegar_sessao():
     try:
-        Session = sessionmaker(bind= db)
-        session = Session()
+        session = SessionLocal()
         yield session
     finally:
         session.close()

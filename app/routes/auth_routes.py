@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuario_model import Usuario  
-from app.dependencies import pegar_sessao, verificar_token
+from app.core.dependencies import pegar_sessao, verificar_token
 from app.main import bcrypt_context, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.schemas.schemas import UsuarioSchema, LoginSchema, UsuarioSchemaResponse
 from sqlalchemy.orm import Session
@@ -47,7 +47,7 @@ async def registrar_usuario(usuarioschema: UsuarioSchema, session: Session = Dep
 async def login(loginschema: LoginSchema, session: Session = Depends(pegar_sessao)):
     usuario = autenticar_usuario(loginschema.email, loginschema.senha, session)
     if not usuario:
-        raise HTTPException(400, 'email ou senha errados')
+        raise HTTPException(401, 'email ou senha errados')
     else:
         access_token = criar_token(usuario.id)
         refresh_token = criar_token(usuario.id, tempo_expiracao= timedelta(days= 7))
@@ -62,7 +62,7 @@ async def login_form(dados_form: OAuth2PasswordRequestForm = Depends(), session:
     """
     usuario = autenticar_usuario(dados_form.username, dados_form.password, session)
     if not usuario:
-        raise HTTPException(400, 'email ou senha errados')
+        raise HTTPException(401, 'email ou senha errados')
     else:
         access_token = criar_token(usuario.id)
         return {'access_token': access_token,
