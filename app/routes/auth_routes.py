@@ -4,7 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.models.models import Usuario  
 from app.dependencies import pegar_sessao, verificar_token
 from app.main import bcrypt_context, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-from app.schemas.schemas import UsuarioSchema, LoginSchema
+from app.schemas.schemas import UsuarioSchema, LoginSchema, UsuarioSchemaResponse
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
@@ -27,12 +27,12 @@ def autenticar_usuario(email, senha, session):
 auth_router = APIRouter(prefix= '/auth', tags= ['auth'])
 
 #utiliza-se decorator para criar rotas 
-@auth_router.get('/autenticar')
-async def autenticar():
-    return {'mensagem': 'voce esta autenticando'} 
+@auth_router.get('/me', response_model= UsuarioSchemaResponse)
+async def info(usuario: Usuario = Depends(verificar_token)):
+    return usuario
 
-@auth_router.post('/criar_usuario')
-async def criar_usuario(usuarioschema: UsuarioSchema, session: Session = Depends(pegar_sessao)):
+@auth_router.post('/registrar')
+async def registrar_usuario(usuarioschema: UsuarioSchema, session: Session = Depends(pegar_sessao)):
     usuario = session.query(Usuario).filter(Usuario.email == usuarioschema.email).first()
     if usuario:
         raise HTTPException(400, detail='usuario já cadastrado')
@@ -57,6 +57,9 @@ async def login(loginschema: LoginSchema, session: Session = Depends(pegar_sessa
     
 @auth_router.post('/login-form')
 async def login_form(dados_form: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(pegar_sessao)):
+    """
+        Rota criada apenas para permitir uso do botão Authorize da documentação do FastApi
+    """
     usuario = autenticar_usuario(dados_form.username, dados_form.password, session)
     if not usuario:
         raise HTTPException(400, 'email ou senha errados')

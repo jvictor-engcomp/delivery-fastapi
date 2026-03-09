@@ -45,3 +45,11 @@ class PedidoSchemaResponse(BaseModel):
 
     class Config:
         from_atributes = True
+
+class UsuarioSchemaResponse(BaseModel):
+    id: int
+    nome: str
+    email: str
+
+    class Config:
+        from_atributes = True
