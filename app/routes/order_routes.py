@@ -2,7 +2,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.dependencies import pegar_sessao, verificar_token
-from app.schemas.schemas import PedidoSchema, ItemSchema, PedidoSchemaResponse
+from app.schemas.pedido_schema import PedidoSchema
+from app.schemas.itempedido_schema import ItemSchema
+from app.schemas.pedido_schema import PedidoSchemaResponse
 from app.models.usuario_model import Usuario
 from app.models.pedido_model import Pedido
 from app.models.itempedido_model import ItemPedido

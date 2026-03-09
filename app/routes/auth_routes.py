@@ -4,7 +4,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from app.models.usuario_model import Usuario  
 from app.core.dependencies import pegar_sessao, verificar_token
 from app.main import bcrypt_context, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-from app.schemas.schemas import UsuarioSchema, LoginSchema, UsuarioSchemaResponse
+from app.schemas.usuario_schema import UsuarioSchema
+from app.schemas.login_schema import LoginSchema
+from app.schemas.usuario_schema import UsuarioSchemaResponse
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 from datetime import datetime, timedelta, timezone
