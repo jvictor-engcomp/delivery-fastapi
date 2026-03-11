@@ -14,13 +14,14 @@ class Pedido(Base):
     id = Column('id', Integer, primary_key= True, autoincrement= True)
     idusuario = Column('idusuario', ForeignKey('usuarios.id'))
     status = Column('status', String, default= 'PENDENTE')
-    preco = Column('preco', Float)
+    preco_pedido = Column('preco', Float)
     itens = relationship("ItemPedido", cascade= 'all, delete')
+    addons = relationship('Addon', cascade='all, delete')
 
-    def __init__(self, idusuario, status= "PENDENTE", preco= 0):
+    def __init__(self, idusuario, status= "PENDENTE", preco_pedido = 0):
         self.idusuario = idusuario
         self.status = status
-        self.preco = preco
+        self.preco_pedido = preco_pedido
 
     def atualizar_valor(self):
-        self.preco = sum(iten.preco_unitario * iten.quantidade for iten in self.itens)
+        self.preco_pedido = sum(iten.preco_unitario * iten.quantidade for iten in self.itens) + sum(addon.preco_addon for addon in self.addons)
