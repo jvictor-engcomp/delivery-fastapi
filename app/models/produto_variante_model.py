@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Float, String, ForeignKey
+from sqlalchemy.orm import relationship
 from app.database.connection import Base
 
 class ProdutoVariante(Base):
@@ -8,6 +9,8 @@ class ProdutoVariante(Base):
     idproduto = Column('idproduto', Integer, ForeignKey('produtos.id'))
     variacao = Column('variacao', String)
     preco_variante = Column('preco_variante', Float)
+
+    produto = relationship('Produto')
 
     def __init__(self, idproduto, variacao, preco_variante):
         self.idproduto = idproduto
