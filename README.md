@@ -29,7 +29,9 @@ app/
 
 ├── routes/
 
-├── dependencies.py
+├── database/
+
+├── core/
 
 
 
@@ -39,8 +41,9 @@ app/
 
 - Cadastro de usuário
 - Login com geração de Access Token e Refresh token(JWT)
-- Criação de pedidos (ainda em desenvolvimento)
-- Consulta de pedidos (ainda em desenvolvimento)
+- Criação de pedidos 
+- Consulta de pedidos
+- Criação de cardápio
 - Proteção de rotas autenticadas
 
 ---
@@ -68,7 +71,6 @@ pip install -r requirements.txt
 
 Crie um arquivo `.env` baseado no `.env.example`:
 
-DATABASE_URL=
 SECRET_KEY=
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
@@ -78,6 +80,12 @@ ACCESS_TOKEN_EXPIRE_MINUTES=30
 
 alembic upgrade head
 
+
+### 6️⃣ Popular o menu
+
+na raiz do proejeto digite a linha de código no terminal:
+
+python -m scripts.populate_menu
 
 ### 6️⃣ Inicie o servidor
 
@@ -102,6 +110,9 @@ O projeto segue separação por camadas:
 - **Schemas** → Validação de dados
 - **Models** → Estrutura do banco
 - **Alembic** → Controle de migrations
+- **Scripts** → Código para popular banco de dados
+- **Core** → Contém dependencies.py
+- **Database** → Dados do banco
 
 ---
 
