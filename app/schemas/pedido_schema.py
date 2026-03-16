@@ -12,7 +12,7 @@ class PedidoSchemaResponse(BaseModel):
     id: int
     idusuario: int
     status: str
-    preco: float
+    preco_pedido: float
     itens: List[ItemSchema]
 
     class Config:

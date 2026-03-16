@@ -1,4 +1,5 @@
 from app.models.addon_model import Addon
+from app.models.itemaddon_model import ItemAddon
 from app.models.categoria_addon_model import CategoriaAddon
 from app.models.categoria_produto_model import CategoriaProduto
 from app.models.itempedido_model import ItemPedido

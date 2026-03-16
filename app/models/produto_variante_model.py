@@ -10,7 +10,7 @@ class ProdutoVariante(Base):
     variacao = Column('variacao', String)
     preco_variante = Column('preco_variante', Float)
 
-    produto = relationship('Produto')
+    produto = relationship('Produto', back_populates= 'variantes')
 
     def __init__(self, idproduto, variacao, preco_variante):
         self.idproduto = idproduto

@@ -9,9 +9,9 @@ class Produto(Base):
     nome = Column('nome', String)
     idcategoria = Column('idcategoria', Integer, ForeignKey('categoriaprodutos.id'))
 
-    categoria = relationship('CategoriaProduto')
-    variantes = relationship('ProdutoVariante', cascade='all, delete')
-
+    categoria = relationship('CategoriaProduto', back_populates= 'produtos')
+    variantes = relationship('ProdutoVariante', back_populates= 'produto')
+    
     def __init__(self, nome, idcategoria):
         self.nome = nome
         self.idcategoria = idcategoria

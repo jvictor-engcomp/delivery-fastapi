@@ -6,14 +6,20 @@ from app.models.usuario_model import Usuario
 from app.models.categoria_produto_model import CategoriaProduto
 from app.models.produto_model import Produto
 from app.models.produto_variante_model import ProdutoVariante
+from app.models.categoria_addon_model import CategoriaAddon
+from app.models.addon_model import Addon
+from app.models.itemaddon_model import ItemAddon
 
 from app.schemas.categoria_produto_schema import CategoriaProdutoSchema
 from app.schemas.produto_schema import ProdutoSchema
 from app.schemas.produto_variante_schema import ProdutoVarianteSchema
+from app.schemas.categoria_addon_schema import CategoriaAddonSchema
+from app.schemas.addon_schema import AddonSchema
+from app.schemas.item_addon_schema import ItemAddonSchema
 
 menu_router = APIRouter(prefix="/menu", tags=['menu'], dependencies=[Depends(verificar_token)])
 
-@menu_router.post('/categoria/produto')
+@menu_router.post('/produto/categoria')
 async def criar_categoria_produto(categoriaprodutoschema: CategoriaProdutoSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria.')
@@ -24,7 +30,7 @@ async def criar_categoria_produto(categoriaprodutoschema: CategoriaProdutoSchema
         'mensagem': 'Categoria criada.'
     }
 
-@menu_router.delete('/categoria/produto/{idcategoria}')
+@menu_router.delete('/produto/categoria/{idcategoria}')
 async def excluir_categoria_produto(idcategoria: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para excluir categoria.')
@@ -100,4 +106,62 @@ async def excluir_produto_variante(idprodutovariante: int, usuario: Usuario = De
     return {
         'mensagem': 'Produto variante excluido.'
     }
+
+@menu_router.post('/addon/categoria')
+async def criar_categoria_addon(categoriaaddonschema: CategoriaAddonSchema,usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    if not usuario.admin:
+        raise HTTPException(403, 'Você não tem permissão para criar categoria de addon.')
     
+    categoriaaddon = CategoriaAddon(categoriaaddonschema.nome)
+    session.add(categoriaaddon)
+    session.commit()
+    return{
+        'mensagem': 'Categoria de addon adicionada com sucesso.'
+    }
+    
+@menu_router.delete('/addon/categoria/{idcategoria}')
+async def excluir_categoria_addon(idcategoria: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    if not usuario.admin:
+        raise HTTPException(403, 'Você não tem permissão para excluir categoria.')
+    
+    categoria = session.query(CategoriaAddon).filter(CategoriaAddon.id == idcategoria).first()
+    if not categoria:
+        raise HTTPException(404, 'Categoria não existe.')
+
+    session.delete(categoria)
+    session.commit()
+    return {
+        'mensagem': 'Categoria excluida.'
+    }
+
+@menu_router.post('/addon')
+async def criar_addon(addonschema: AddonSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    if not usuario.admin:
+        raise HTTPException(403, 'Você não tem permissão para criar categoria.')
+    
+    categoria = session.query(CategoriaAddon).filter(CategoriaAddon.id == addonschema.idcategoria).first()
+    if not categoria:
+        raise HTTPException(404, 'Categoria não existe.')
+   
+    addon = Addon(addonschema.idcategoria, addonschema.nome, addonschema.preco_addon)
+    session.add(addon)
+    session.commit()
+    return {
+         'mensagem': 'Addon criado.'
+    }
+
+@menu_router.delete('/addon/{idaddon}')
+async def excluir_addon(idaddon: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    if not usuario.admin:
+        raise HTTPException(403, 'Você não tem permissão para excluir esse addon.')
+    
+    addon = session.query(Addon).filter(Addon.id == idaddon).first()
+    if not addon:
+        raise HTTPException(404, 'Addon não existe.')
+
+    session.delete(addon)
+    session.commit()
+    return {
+        'mensagem': 'Addon excluida.'
+    }
+

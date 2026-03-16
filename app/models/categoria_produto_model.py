@@ -8,7 +8,7 @@ class CategoriaProduto(Base):
     id = Column('id', Integer, primary_key= True, autoincrement= True)
     nome = Column('nome', String)
 
-    pedidos =  relationship('Produto', cascade='all, delete')
+    produtos =  relationship('Produto', back_populates= 'categoria')
     
     def __init__(self, nome):
         self.nome = nome
