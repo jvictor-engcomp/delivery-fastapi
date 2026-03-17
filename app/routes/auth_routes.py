@@ -28,13 +28,6 @@ def autenticar_usuario(email, senha, session):
 
 auth_router = APIRouter(prefix= '/auth', tags= ['auth'])
 
-#utiliza-se decorator para criar rotas 
-@auth_router.get('/me', response_model= UsuarioSchemaResponse)
-async def info(usuario: Usuario = Depends(verificar_token)):
-    """Retorna informações do usuário logado no momento."""
-    
-    return usuario
-
 @auth_router.post('/registrar')
 async def registrar_usuario(usuarioschema: UsuarioSchema, session: Session = Depends(pegar_sessao)):
     usuario = session.query(Usuario).filter(Usuario.email == usuarioschema.email).first()

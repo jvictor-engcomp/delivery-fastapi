@@ -19,3 +19,6 @@ class UsuarioSchemaResponse(BaseModel):
 
     class Config:
         from_atributes = True
+
+class AtualizarUsuarioSchema(BaseModel):
+    nome: str
