@@ -1,7 +1,7 @@
 # 🍔 Delivery FastAPI
 
 Backend de um sistema de delivery desenvolvido com FastAPI.
-Permite cadastro de usuários, autenticação com JWT e gerenciamento de pedidos.
+Permite cadastro de usuários, autenticação com JWT, gerenciamento de pedidos e criação do cardápio.
 
 ---
 
@@ -72,8 +72,11 @@ pip install -r requirements.txt
 Crie um arquivo `.env` baseado no `.env.example`:
 
 SECRET_KEY=
+
 ALGORITHM=HS256
+
 ACCESS_TOKEN_EXPIRE_MINUTES=30
+
 
 
 ### 5️⃣ Execute as migrations
