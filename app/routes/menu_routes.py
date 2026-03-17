@@ -21,6 +21,7 @@ menu_router = APIRouter(prefix="/menu", tags=['menu'], dependencies=[Depends(ver
 
 @menu_router.post('/produto/categoria')
 async def criar_categoria_produto(categoriaprodutoschema: CategoriaProdutoSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Todo produto tem uma categoria, Pizza de Calabresa é da categoria Pizza. Logo, aqui é o primeiro passo para formar o menu."""
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria.')
     categoria = CategoriaProduto(categoriaprodutoschema.nome)
@@ -47,6 +48,7 @@ async def excluir_categoria_produto(idcategoria: int, usuario: Usuario = Depends
 
 @menu_router.post('/produto')
 async def criar_produto(produtoschema: ProdutoSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Um produto de uma categoria, como Pizza de Calabresa ou Pizza de Frango"""
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria.')
     
@@ -78,6 +80,7 @@ async def excluir_produto(idproduto: int, usuario: Usuario = Depends(verificar_t
 
 @menu_router.post('/produto/variante')
 async def criar_produto_variante(produtovarianteschema: ProdutoVarianteSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Aqui tem as variações de tamanho ou o que o produto puder variar. Pizza de Calabresa Grande por exemplo. É isso que um ItemPedido contém"""
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria.')
     
@@ -109,6 +112,7 @@ async def excluir_produto_variante(idprodutovariante: int, usuario: Usuario = De
 
 @menu_router.post('/addon/categoria')
 async def criar_categoria_addon(categoriaaddonschema: CategoriaAddonSchema,usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Segue a mesma lógica da categoria de produto, mas para adicionais"""
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria de addon.')
     
@@ -136,6 +140,7 @@ async def excluir_categoria_addon(idcategoria: int, usuario: Usuario = Depends(v
 
 @menu_router.post('/addon')
 async def criar_addon(addonschema: AddonSchema, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Criando um Addon a partir de uma categoria de addon. Esse se conecta ao ItemPedido por meio do ItemAddon. Pedidos são formados por ItemPedido(que pode conter ItemAddon)"""
     if not usuario.admin:
         raise HTTPException(403, 'Você não tem permissão para criar categoria.')
     

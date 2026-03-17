@@ -13,6 +13,7 @@ def pegar_sessao():
         session.close()
 
 def verificar_token(token: str = Depends(oauth2_schema), session: Session = Depends(pegar_sessao)):
+    """Recebe um token e verifica se ele aponta para um usuário válido."""
     try:
         dict_info = jwt.decode(token, SECRET_KEY, ALGORITHM)
         id_usuario = int(dict_info.get('sub'))

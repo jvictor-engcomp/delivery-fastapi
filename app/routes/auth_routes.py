@@ -31,6 +31,8 @@ auth_router = APIRouter(prefix= '/auth', tags= ['auth'])
 #utiliza-se decorator para criar rotas 
 @auth_router.get('/me', response_model= UsuarioSchemaResponse)
 async def info(usuario: Usuario = Depends(verificar_token)):
+    """Retorna informações do usuário logado no momento."""
+    
     return usuario
 
 @auth_router.post('/registrar')
@@ -72,6 +74,7 @@ async def login_form(dados_form: OAuth2PasswordRequestForm = Depends(), session:
 
 @auth_router.get('/refresh')
 async def use_refresh_token(usuario: Usuario = Depends(verificar_token)):
+    """Cria um novo acess token por meio da função que recebe um token e retorna um usuário."""
     access_token = criar_token(usuario.id)
     return {'access_token': access_token, 
                 'token_type': 'Bearer'}

@@ -18,6 +18,7 @@ order_router = APIRouter(prefix= '/orders', tags= ['orders'], dependencies=[Depe
 
 @order_router.post('/')
 async def criar_pedido(pedidoschema: PedidoSchema, session: Session = Depends(pegar_sessao)):
+    """Primeiro passo, criar um pedido que abriga itens"""
     usuario_referente = session.query(Usuario).filter(Usuario.id == pedidoschema.idusuario).first()
     if usuario_referente:
         novo_pedido = Pedido(pedidoschema.idusuario)
@@ -29,6 +30,7 @@ async def criar_pedido(pedidoschema: PedidoSchema, session: Session = Depends(pe
 
 @order_router.delete('/{id_pedido}/status')
 async def cancelar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Apenas muda o status do pedido"""
     pedido = session.query(Pedido).filter(Pedido.id == id_pedido).first()
     if not pedido:
         raise HTTPException(404, 'Pedido não encontrado.')
@@ -43,12 +45,10 @@ async def cancelar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar_t
         'pedido': pedido
     }
 
-#utiliza-se decorator para criar rotas 
+
 @order_router.get('/')
 async def listar(usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
-    '''
-    Docstring é captada pelo fastapi, pode ser usada para documentar
-    '''
+    """Lista pedidos do usuário logado no momento"""
     pedidos = session.query(Pedido).filter(Pedido.idusuario == usuario.id).all()
     return {'mensagem': 'listando pedidos',
             'pedidos': pedidos}
@@ -56,6 +56,7 @@ async def listar(usuario: Usuario = Depends(verificar_token), session: Session =
     
 @order_router.patch('/{id_pedido}/status')
 async def finalizar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Muda apenas o status"""
     pedido = session.query(Pedido).filter(Pedido.id == id_pedido).first()
     if not pedido:
         raise HTTPException(404, 'Pedido não existe.')
@@ -72,6 +73,7 @@ async def finalizar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar_
 
 @order_router.get('/{id_pedido}', response_model = PedidoSchemaResponse)
 async def visualizar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Permite ver o seu pedido. Caso usuário logado seja admin, esse pode ver qualquer pedido"""
     pedido = session.query(Pedido).filter(Pedido.id == id_pedido).first()
     if not pedido:
         raise HTTPException(404, 'Pedido não existe.')
@@ -82,16 +84,18 @@ async def visualizar_pedido(id_pedido: int, usuario: Usuario = Depends(verificar
     
 @order_router.get('/admin/{id_usuario}', response_model = List[PedidoSchemaResponse])
 async def visualizar_pedidos(id_usuario: int, usuario: Usuario = Depends(verificar_token), session: Session = Depends(pegar_sessao)):
+    """Rota pensada no admin, ele pode listar os pedidos de qualquer usuário"""
     pedidos = session.query(Pedido).filter(Pedido.idusuario == id_usuario).all()
     if not pedidos:
         raise HTTPException(404, 'Pedido não existe.')
     if id_usuario != usuario.id and not usuario.admin:
-        raise HTTPException(403, 'Você não pode visualizar esse pedido.')
+        raise HTTPException(403, 'Você não pode visualizar esses pedidos.')
     
     return pedidos
 
 @order_router.post('/{id_pedido}/itens')
 async def adicionar_item(id_pedido: int, itemschema: ItemSchema, usuario: Usuario = Depends(verificar_token),  session: Session = Depends(pegar_sessao)):
+    """Essa rota cria um ItemPedido e o adiciona em um pedido"""
     pedido = session.query(Pedido).filter(Pedido.id == id_pedido).first()
     if not pedido:
         raise HTTPException(404, 'Pedido não existe.')
@@ -134,6 +138,7 @@ async def remover_item(id_pedido: int, id_item: int, usuario: Usuario = Depends(
 
 @order_router.post('/pedido/{iditem}/addon')
 async def adicionar_item_addon(iditem: int, itemaddonschema: ItemAddonSchema, usuario: Usuario = Depends(verificar_token),  session: Session = Depends(pegar_sessao)):
+    """Essa rota cria um ItemAddon e o adiciona em um ItemPedido"""
     item = session.query(ItemPedido).filter(ItemPedido.id == iditem).first()
     if not item:
         raise HTTPException(404, 'Item não existe.')

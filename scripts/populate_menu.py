@@ -5,6 +5,8 @@ from app.models.produto_variante_model import ProdutoVariante
 from app.models.categoria_addon_model import CategoriaAddon
 from app.models.addon_model import Addon
 
+"""Na raiz do projeto no terminal rode: python -m scripts.populate_menu"""
+
 session = SessionLocal()
 
 def popular_menu():
