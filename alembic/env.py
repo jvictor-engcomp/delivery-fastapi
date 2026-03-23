@@ -7,6 +7,10 @@ from alembic import context
 
 import sys
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 

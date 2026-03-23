@@ -87,7 +87,7 @@ async def criar_produto_variante(produtovarianteschema: ProdutoVarianteSchema, u
     produto = session.query(Produto).filter(Produto.id == produtovarianteschema.idproduto).first()
     if not produto:
         raise HTTPException(404, 'Produto não existe.')
-   
+
     produtovariante = ProdutoVariante(produtovarianteschema.idproduto, produtovarianteschema.variacao, produtovarianteschema.preco_variante)
     session.add(produtovariante)
     session.commit()
