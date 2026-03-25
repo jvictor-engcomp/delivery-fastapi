@@ -6,4 +6,4 @@ class ProdutoVarianteSchema(BaseModel):
     preco_variante: float
 
     class Config:
-        from_atributes = True
+        from_attributes = True

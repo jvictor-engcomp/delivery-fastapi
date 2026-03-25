@@ -6,4 +6,4 @@ class LoginSchema(BaseModel):
     senha: str
 
     class Config:
-        from_atributes = True 
+        from_attributes = True 

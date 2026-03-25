@@ -6,4 +6,4 @@ class AddonSchema(BaseModel):
     preco_addon: float
 
     class Config:
-        from_atributes = True 
+        from_attributes = True 

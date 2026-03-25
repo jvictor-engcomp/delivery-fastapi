@@ -10,7 +10,7 @@ class UsuarioSchema(BaseModel):
 
     #vai ser interpretado como orm 
     class Config:
-        from_atributes = True
+        from_attributes = True
 
 class UsuarioSchemaResponse(BaseModel):
     id: int
@@ -18,7 +18,7 @@ class UsuarioSchemaResponse(BaseModel):
     email: str
 
     class Config:
-        from_atributes = True
+        from_attributes = True
 
 class AtualizarUsuarioSchema(BaseModel):
     nome: str

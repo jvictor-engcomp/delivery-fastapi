@@ -5,4 +5,4 @@ class ProdutoSchema(BaseModel):
     idcategoria: int
 
     class Config:
-        from_atributes = True 
+        from_attributes = True 

@@ -6,7 +6,7 @@ class PedidoSchema(BaseModel):
     idusuario: int
 
     class Config:
-        from_atributes = True
+        from_attributes = True
 
 class PedidoSchemaResponse(BaseModel):
     id: int
@@ -16,4 +16,4 @@ class PedidoSchemaResponse(BaseModel):
     itens: List[ItemSchema]
 
     class Config:
-        from_atributes = True
+        from_attributes = True
